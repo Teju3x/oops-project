@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Lost &amp; Found &bull;</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800;900&display=swap');
+
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --yellow: #FFE600;
+            --yellow-light: #FFF7B2;
+            --pink: #FF5376;
+            --pink-light: #FFE4E8;
+            --green: #00F090;
+            --green-light: #DCFCE7;
+            --purple: #C084FC;
+            --purple-light: #F3E8FF;
+            --cyan: #38BDF8;
+            --cyan-light: #E0F2FE;
+            --orange: #FB923C;
+            --bg: #F8F5EE;
+            --border: 3.5px solid #000000;
+            --shadow-sm: 3px 3px 0px #000000;
+            --shadow: 5px 5px 0px #000000;
+            --shadow-lg: 8px 8px 0px #000000;
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            background-image: radial-gradient(#000000 1.2px, transparent 1.2px);
+            background-size: 24px 24px;
+            color: var(--black);
+            padding: 24px 16px 40px;
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Neo-Brutalist Header */
+        header {
+            background: var(--yellow);
+            border: var(--border);
+            box-shadow: var(--shadow-lg);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-title-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .header-badge-top {
+            display: inline-block;
+            background: var(--black);
+            color: var(--white);
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            width: fit-content;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .header-pills {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .neo-pill {
+            background: var(--white);
+            border: 2.5px solid var(--black);
+            box-shadow: var(--shadow-sm);
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .neo-pill.live {
+            background: var(--green);
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--black);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Toast notification */
+        .toast-neo {
+            display: none;
+            background: var(--yellow);
+            border: var(--border);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            padding: 14px 20px;
+            margin-bottom: 24px;
+            font-size: 15px;
+            font-weight: 800;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .toast-close {
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 900;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Colorful Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 16px;
+            margin-bottom: 26px;
+        }
+
+        .stat-card {
+            border: var(--border);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            padding: 18px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .stat-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card.c-white { background: var(--white); }
+        .stat-card.c-pink { background: var(--pink); color: var(--black); }
+        .stat-card.c-green { background: var(--green); color: var(--black); }
+        .stat-card.c-purple { background: var(--purple); color: var(--black); }
+        .stat-card.c-cyan { background: var(--cyan); color: var(--black); }
+
+        .stat-label {
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 38px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        /* Generic Neo Card */
+        .neo-card {
+            background: var(--white);
+            border: var(--border);
+            box-shadow: var(--shadow-lg);
+            border-radius: var(--radius);
+            margin-bottom: 26px;
+            overflow: hidden;
+        }
+
+        .neo-card-header {
+            padding: 16px 20px;
+            border-bottom: var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .neo-card-header.bg-purple { background: var(--purple-light); }
+        .neo-card-header.bg-yellow { background: var(--yellow); }
+        .neo-card-header.bg-cyan { background: var(--cyan-light); }
+
+        .neo-card-title {
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .neo-card-body {
+            padding: 22px;
+        }
+
+        /* Smart Match Engine */
+        .match-card {
+            background: var(--yellow-light);
+            border: 3px solid var(--black);
+            box-shadow: var(--shadow);
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 16px;
+        }
+
+        .match-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .match-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .match-badge {
+            background: var(--black);
+            color: var(--yellow);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+
+        .match-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 680px) {
+            .match-content-grid { grid-template-columns: 1fr; }
+        }
+
+        .match-side {
+            background: var(--white);
+            border: 2.5px solid var(--black);
+            border-radius: 8px;
+            padding: 12px 14px;
+        }
+
+        .match-lost-side {
+            border-left: 8px solid var(--pink);
+        }
+
+        .match-found-side {
+            border-left: 8px solid var(--green);
+        }
+
+        .side-label {
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .match-item-name {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .match-detail {
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 3px;
+        }
+
+        .empty-match-box {
+            text-align: center;
+            padding: 24px;
+            font-size: 14px;
+            font-weight: 700;
+            background: #fafaf9;
+            border: 2px dashed var(--black);
+            border-radius: 8px;
+        }
+
+        /* Tab Switcher */
+        .tabs-wrapper {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .neo-tab-btn {
+            background: var(--white);
+            border: var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.15s ease;
+        }
+
+        .neo-tab-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: var(--shadow);
+        }
+
+        .neo-tab-btn.active.lost-tab {
+            background: var(--pink);
+            color: var(--black);
+            transform: translate(-2px, -2px);
+            box-shadow: var(--shadow);
+        }
+
+        .neo-tab-btn.active.found-tab {
+            background: var(--green);
+            color: var(--black);
+            transform: translate(-2px, -2px);
+            box-shadow: var(--shadow);
+        }
+
+        .form-panel {
+            display: none;
+        }
+
+        .form-panel.active {
+            display: block;
+        }
+
+        /* Neo Inputs */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"], input[type="date"], select, textarea {
+            width: 100%;
+            border: 3px solid var(--black);
+            box-shadow: var(--shadow-sm);
+            border-radius: 8px;
+            padding: 11px 14px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            background: var(--white);
+            color: var(--black);
+            outline: none;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            transform: translate(-2px, -2px);
+            box-shadow: var(--shadow);
+            background: #fffdf5;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Neo Submit Buttons */
+        .btn-neo-submit {
+            padding: 14px 28px;
+            border: var(--border);
+            box-shadow: var(--shadow);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            margin-top: 14px;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-neo-submit:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-neo-submit:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--black);
+        }
+
+        .btn-lost-submit { background: var(--pink); color: var(--black); }
+        .btn-found-submit { background: var(--green); color: var(--black); }
+
+        /* Filter Toolbar */
+        .toolbar-neo {
+            background: var(--cyan-light);
+            border: 3px solid var(--black);
+            box-shadow: var(--shadow);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .toolbar-search {
+            flex: 1 1 240px;
+        }
+
+        .toolbar-filter {
+            flex: 0 1 170px;
+        }
+
+        /* Table */
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            border: 3px solid var(--black);
+            box-shadow: var(--shadow);
+            border-radius: 10px;
+            background: var(--white);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            text-align: left;
+        }
+
+        th {
+            background: var(--yellow);
+            color: var(--black);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 12px;
+            border-bottom: 3px solid var(--black);
+            border-right: 2px solid var(--black);
+            white-space: nowrap;
+        }
+
+        th:last-child { border-right: none; }
+
+        td {
+            padding: 12px;
+            border-bottom: 2px solid var(--black);
+            border-right: 2px solid var(--black);
+            vertical-align: middle;
+            font-weight: 600;
+        }
+
+        td:last-child { border-right: none; }
+
+        tr:last-child td { border-bottom: none; }
+
+        tr:hover {
+            background-color: #FEF9C3;
+        }
+
+        .col-id {
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        .item-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--black);
+        }
+
+        .item-desc {
+            font-size: 12px;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .phone-text {
+            font-size: 12px;
+            color: #475569;
+            font-weight: 700;
+        }
+
+        /* Neo Badges & Pills */
+        .badge-neo {
+            display: inline-block;
+            padding: 4px 10px;
+            border: 2px solid var(--black);
+            box-shadow: 2px 2px 0px var(--black);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .badge-lost { background: var(--pink); color: var(--black); }
+        .badge-found { background: var(--green); color: var(--black); }
+
+        .badge-category {
+            display: inline-block;
+            padding: 3px 8px;
+            border: 2px solid var(--black);
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .cat-electronics { background: var(--purple-light); }
+        .cat-idcards { background: var(--cyan-light); }
+        .cat-bags { background: var(--yellow-light); }
+        .cat-books { background: #FDE047; }
+        .cat-keys { background: #A7F3D0; }
+        .cat-clothing { background: #FBCFE8; }
+        .cat-other { background: #E2E8F0; }
+
+        .custody-badge {
+            display: inline-block;
+            background: #DCFCE7;
+            border: 1.5px solid var(--black);
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #065F46;
+            margin-top: 4px;
+        }
+
+        .date-pill {
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 3px 8px;
+            border: 2px solid var(--black);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pill.open { background: var(--green-light); color: #047857; }
+        .status-pill.claimed { background: #E2E8F0; color: #475569; }
+
+        /* Actions */
+        .btn-neo-action {
+            display: inline-block;
+            padding: 4px 10px;
+            border: 2px solid var(--black);
+            box-shadow: 2px 2px 0px var(--black);
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 900;
+            text-decoration: none;
+            color: var(--black);
+            transition: all 0.1s ease;
+            white-space: nowrap;
+        }
+
+        .btn-neo-action:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px var(--black);
+        }
+
+        .btn-neo-action:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px var(--black);
+        }
+
+        .btn-claim { background: var(--cyan); }
+        .btn-delete { background: var(--pink); margin-left: 3px; }
+
+        .empty-box {
+            text-align: center;
+            font-weight: 800;
+            padding: 30px;
+            background: #FEFCE8;
+            font-size: 14px;
+        }
+
+        footer {
+            margin-top: 36px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Neo Header -->
+        <header>
+            <div class="header-title-box">
+                <span class="header-badge-top">Campus Edition &bull; OOPS Project</span>
+                <h1>Campus Lost &amp; Found</h1>
+            </div>
+           
+        </header>
+
+        <!-- Warning shown when user opens file directly via file:// -->
+        <div id="fileProtocolWarning" style="display:none; background:#FF5376; border:3.5px solid #000; box-shadow:6px 6px 0px #000; border-radius:12px; padding:18px 22px; margin-bottom:24px;">
+            <div style="font-size:17px; font-weight:900; text-transform:uppercase; margin-bottom:6px;">YOU OPENED THIS FILE DIRECTLY (file:// protocol)</div>
+            <div style="font-size:13.5px; font-weight:700; line-height:1.6;">
+                Web browsers do not allow local HTML files to read or write disk files like <code>items.txt</code> without a backend server.<br>
+                To connect this frontend to <code>items.txt</code> and the Java backend:
+                <ol style="margin: 8px 0 0 24px; font-weight:800;">
+                    <li>Start the Java server: <code>java Server</code></li>
+                    <li>Open this link in your browser: <a href="http://localhost:8080" style="color:#000; text-decoration:underline; font-weight:900;">http://localhost:8080</a></li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Pop Toast Notification -->
+        <div id="toastNotification" class="toast-neo">
+            <span id="toastMsg">Action executed successfully!</span>
+            <button class="toast-close" onclick="this.parentElement.style.display='none'">&times;</button>
+        </div>
+
+        <!-- Colorful Metrics Grid -->
+        <div class="stats-grid">
+            <div class="stat-card c-white">
+                <div class="stat-label">Total Records</div>
+                <div class="stat-value"><!-- STAT_TOTAL --></div>
+            </div>
+            <div class="stat-card c-pink">
+                <div class="stat-label">Lost Reports</div>
+                <div class="stat-value"><!-- STAT_LOST --></div>
+            </div>
+            <div class="stat-card c-green">
+                <div class="stat-label">Found Items</div>
+                <div class="stat-value"><!-- STAT_FOUND --></div>
+            </div>
+            <div class="stat-card c-purple">
+                <div class="stat-label">Smart Matches</div>
+                <div class="stat-value"><!-- STAT_MATCHES --></div>
+            </div>
+            <div class="stat-card c-cyan">
+                <div class="stat-label">Claimed Items</div>
+                <div class="stat-value"><!-- STAT_CLAIMED --></div>
+            </div>
+        </div>
+
+        <!-- Smart Match Engine -->
+        <div class="neo-card">
+            <div class="neo-card-header bg-purple">
+                <div class="neo-card-title">
+                    <span>Smart Match Engine</span>
+                </div>
+                <span class="neo-pill" style="font-size:11px; padding:3px 10px;">Auto Category + Location Pairing</span>
+            </div>
+            <div class="neo-card-body" style="background:#FFFDF7;">
+                <!-- MATCHES_PLACEHOLDER -->
+            </div>
+        </div>
+
+        <!-- Report Item Section -->
+        <div class="neo-card">
+            <div class="neo-card-header bg-yellow">
+                <div class="neo-card-title">
+                    <span>Submit New Report</span>
+                </div>
+                <span style="font-size:12px; font-weight:800;">Choose report type below:</span>
+            </div>
+            <div class="neo-card-body">
+                <!-- Tab Controls -->
+                <div class="tabs-wrapper">
+                    <button type="button" class="neo-tab-btn active lost-tab" onclick="switchTab('lost')">
+                         Report Lost Item
+                    </button>
+                    <button type="button" class="neo-tab-btn found-tab" onclick="switchTab('found')">
+                         Report Found Item
+                    </button>
+                </div>
+
+                <!-- Lost Form -->
+                <div id="lostPanel" class="form-panel active">
+                    <form action="/add-lost" method="POST">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Item Title *</label>
+                                <input type="text" name="title" placeholder="e.g. Space Gray MacBook Air M2" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Category *</label>
+                                <select name="category" required>
+                                    <option value="Electronics">Electronics</option>
+                                    <option value="ID & Cards">ID &amp; Cards</option>
+                                    <option value="Bags">Bags &amp; Wallets</option>
+                                    <option value="Books">Books &amp; Stationery</option>
+                                    <option value="Keys">Keys</option>
+                                    <option value="Clothing">Clothing &amp; Accessories</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Location Where Lost *</label>
+                                <input type="text" name="location" placeholder="e.g. Library 2nd Floor reading room" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Date Lost *</label>
+                                <input type="date" name="date" id="lostDateInput" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Description &amp; Marks</label>
+                                <textarea name="description" placeholder="Color, serial number, stickers, scratches, case details..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Owner Name *</label>
+                                <input type="text" name="name" placeholder="Your Full Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Phone / Roll No *</label>
+                                <input type="text" name="phone" placeholder="Phone or Campus Roll No" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-neo-submit btn-lost-submit">
+                             Publish Lost Report
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Found Form -->
+                <div id="foundPanel" class="form-panel">
+                    <form action="/add-found" method="POST">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Item Title *</label>
+                                <input type="text" name="title" placeholder="e.g. Black Leather Titan Wallet" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Category *</label>
+                                <select name="category" required>
+                                    <option value="Electronics">Electronics</option>
+                                    <option value="ID & Cards">ID &amp; Cards</option>
+                                    <option value="Bags">Bags &amp; Wallets</option>
+                                    <option value="Books">Books &amp; Stationery</option>
+                                    <option value="Keys">Keys</option>
+                                    <option value="Clothing">Clothing &amp; Accessories</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Location Where Found *</label>
+                                <input type="text" name="location" placeholder="e.g. Cafeteria Table 4" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Date Found *</label>
+                                <input type="date" name="date" id="foundDateInput" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Description &amp; Identifying Details</label>
+                                <textarea name="description" placeholder="Condition, unique details, brand..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Finder Name *</label>
+                                <input type="text" name="name" placeholder="Finder Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Phone / Roll No *</label>
+                                <input type="text" name="phone" placeholder="Phone or Campus Roll No" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Safe Custody Location (Where item is kept) *</label>
+                                <input type="text" name="storagePlace" placeholder="e.g. Campus Security Office Rm 102" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-neo-submit btn-found-submit">
+                            Publish Found Report
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campus Records Table -->
+        <div class="neo-card">
+            <div class="neo-card-header bg-cyan">
+                <div class="neo-card-title">
+                    <span> Campus Item Database</span>
+                </div>
+                <div id="itemCountDisplay" class="neo-pill" style="font-size:12px; padding:3px 12px;"></div>
+            </div>
+            <div class="neo-card-body">
+                <!-- Neobrutalist Filter Toolbar -->
+                <div class="toolbar-neo">
+                    <div class="toolbar-search">
+                        <input type="text" id="searchInput" placeholder="🔍 Search records by title, location, desc, name..." oninput="filterItems()">
+                    </div>
+                    <div class="toolbar-filter">
+                        <select id="categoryFilter" onchange="filterItems()">
+                            <option value="">All Categories</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="ID & Cards">ID &amp; Cards</option>
+                            <option value="Bags">Bags</option>
+                            <option value="Books">Books</option>
+                            <option value="Keys">Keys</option>
+                            <option value="Clothing">Clothing</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-filter">
+                        <select id="typeFilter" onchange="filterItems()">
+                            <option value="">All Types</option>
+                            <option value="LOST">Lost Only</option>
+                            <option value="FOUND">Found Only</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-filter">
+                        <select id="statusFilter" onchange="filterItems()">
+                            <option value="">All Statuses</option>
+                            <option value="Open">Open Only</option>
+                            <option value="Claimed">Claimed Only</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Type</th>
+                                <th>Title &amp; Details</th>
+                                <th>Category</th>
+                                <th>Location / Custody</th>
+                                <th>Date</th>
+                                <th>Contact</th>
+                                <th>Status &amp; Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- TABLE_ROWS_PLACEHOLDER -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        // Set default dates to today
+        const todayStr = new Date().toISOString().split('T')[0];
+        const lostDate = document.getElementById('lostDateInput');
+        const foundDate = document.getElementById('foundDateInput');
+        if (lostDate) lostDate.value = todayStr;
+        if (foundDate) foundDate.value = todayStr;
+
+        // Switch between Lost and Found tabs
+        function switchTab(type) {
+            const lostBtn = document.querySelector('.lost-tab');
+            const foundBtn = document.querySelector('.found-tab');
+            const lostPanel = document.getElementById('lostPanel');
+            const foundPanel = document.getElementById('foundPanel');
+
+            if (type === 'lost') {
+                lostBtn.classList.add('active');
+                foundBtn.classList.remove('active');
+                lostPanel.classList.add('active');
+                foundPanel.classList.remove('active');
+            } else {
+                foundBtn.classList.add('active');
+                lostBtn.classList.remove('active');
+                foundPanel.classList.add('active');
+                lostPanel.classList.remove('active');
+            }
+        }
+
+        // URL parameter toast notification
+        const params = new URLSearchParams(window.location.search);
+        const toast = document.getElementById('toastNotification');
+        const toastMsg = document.getElementById('toastMsg');
+        if (params.has('msg')) {
+            const msg = params.get('msg');
+            toast.style.display = 'flex';
+            if (msg === 'lost_added') {
+                toast.style.background = '#FF5376';
+                toastMsg.textContent = ' LOST ITEM REPORT REGISTERED & SAVED TO ITEMS.TXT!';
+            } else if (msg === 'found_added') {
+                toast.style.background = '#00F090';
+                toastMsg.textContent = ' FOUND ITEM REPORT REGISTERED & SAVED TO ITEMS.TXT!';
+            } else if (msg === 'claimed') {
+                toast.style.background = '#38BDF8';
+                toastMsg.textContent = ' ITEM MARKED AS CLAIMED & RESOLVED!';
+            } else if (msg === 'deleted') {
+                toast.style.background = '#FFE600';
+                toastMsg.textContent = ' ITEM RECORD REMOVED SUCCESSFULLY!';
+            }
+            window.history.replaceState({}, document.title, window.location.pathname);
+            setTimeout(() => { toast.style.display = 'none'; }, 4500);
+        }
+
+        // Live table filtering
+        function filterItems() {
+            const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+            const cat = (document.getElementById('categoryFilter').value || '').toLowerCase();
+            const type = (document.getElementById('typeFilter').value || '').toUpperCase();
+            const status = (document.getElementById('statusFilter').value || '').toLowerCase();
+
+            const rows = document.querySelectorAll('#tableBody tr');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                if (row.querySelector('.empty-box')) return;
+
+                const rowText = row.innerText.toLowerCase();
+                const rowType = row.getAttribute('data-type') || '';
+                const rowCategory = (row.getAttribute('data-category') || '').toLowerCase();
+                const rowStatus = (row.getAttribute('data-status') || '').toLowerCase();
+
+                const matchesQuery = !query || rowText.includes(query);
+                const matchesCat = !cat || rowCategory.includes(cat);
+                const matchesType = !type || rowType === type;
+                const matchesStatus = !status || rowStatus === status;
+
+                if (matchesQuery && matchesCat && matchesType && matchesStatus) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            const countDisplay = document.getElementById('itemCountDisplay');
+            if (countDisplay) {
+                countDisplay.textContent = `Showing ${visibleCount} items`;
+            }
+        }
+
+        // Protocol check and form feedback
+        if (window.location.protocol === 'file:') {
+            const warning = document.getElementById('fileProtocolWarning');
+            if (warning) warning.style.display = 'block';
+            const statusPill = document.getElementById('serverStatusPill');
+            if (statusPill) {
+                statusPill.innerHTML = ' DISCONNECTED (FILE MODE)';
+                statusPill.classList.remove('live');
+                statusPill.style.background = '#FF5376';
+            }
+        }
+
+        // Form submit listener with file:// safeguard & loading states
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                if (window.location.protocol === 'file:') {
+                    e.preventDefault();
+                    alert(" CANNOT SAVE IN FILE MODE!\n\nHTML files cannot write to items.txt directly.\n\nPlease follow these 2 steps:\n1. Run 'java Server' in terminal\n2. Open http://localhost:8080 in your browser\n\nThen your reports will automatically save to items.txt!");
+                    return false;
+                }
+                const btn = form.querySelector('button[type="submit"]');
+                if (btn) {
+                    btn.innerHTML = ' SAVING TO ITEMS.TXT...';
+                    btn.style.opacity = '0.8';
+                }
+            });
+        });
+
+        // Initialize count on load
+        window.addEventListener('DOMContentLoaded', () => {
+            filterItems();
+        });
+    </script>
+</body>
+</html>
